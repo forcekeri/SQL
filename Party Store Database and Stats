@@ -1,0 +1,32 @@
+--Create a store database.
+
+CREATE TABLE store (id integer primary key, name text, description text, stock integer, sold integer, price integer);
+
+INSERT INTO store VALUES
+(1, "Balloons", "Rainbow Colors - 10 pack", 10, 15, 2.99),
+(2, "Table Cloth", "Black", 5, 2, 3.49),
+(3, "Table Cloth", "Purple", 3, 12, 3.49),
+(4, "Party Hat", "Silver", 10, 24, 1.99),
+(5, "Balloons", "Glitter Pink - 5 pack", 8, 11, 3.50),
+(6, "Cake Topper", "Happy Birthday", 21, 33, 2.99),
+(7, "Candles", "White and Red Stripe", 10, 1, 1.49),
+(8, "Wrapping Paper", "Flowers", 5, 13, 2.99),
+(9, "Wrapping Paper", "Cakes", 13, 29, 2.99),
+(10, "Balloons", "Age Numbers", 37, 88, 5.99),
+(11, "Party Favor Bags", "Clear", 10, 33, 2.49),
+(12, "Candy", "Assorted Mix", 5, 12, 7.49),
+(13, "Candy", "M&Ms", 12, 12, 4.99),
+(14, "Party Hat", "Gold", 8, 13, 1.99),
+(15, "Cake Topper", "Age Numbers", 12, 24, 2.99);
+
+--display the database ordered by price.
+SELECT * FROM store ORDER BY price desc;
+
+--which item has less than 10 in stock, orderd by items most sold?
+SELECT * FROM store WHERE stock < 10 ORDER BY sold desc;
+
+--display name description and price ordered by price
+SELECT name, description, price FROM store ORDER BY price;
+
+--what is the average price for candles?
+SELECT AVG(price) FROM store WHERE name="Candles";
