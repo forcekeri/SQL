@@ -60,3 +60,6 @@ SELECT name, popularity, gender,
         ELSE "Below Average"
     END as "Fight_Level"
 FROM marvels ORDER BY popularity asc;
+
+--lists number of characters by gender
+SELECT gender, COUNT(*) gender FROM marvels GROUP BY gender
