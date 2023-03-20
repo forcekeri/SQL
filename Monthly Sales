@@ -1,4 +1,4 @@
---Remember to filter out the blank and incorrect order IDs
+#In this SQL, I am using a database with multiple taables to quantify statistics about customer orders.
 
 #1.	How many orders were placed in January? 
 SELECT Count(*) FROM JanSales WHERE length(orderID)=6 AND orderID <> 'Order ID';
@@ -15,11 +15,10 @@ FROM customers
 JOIN FebSales
 ON customers.order_id=FebSales.orderID
 WHERE length(orderID)=6 AND orderID <> 'Order ID';
-
-#5a.	What is the total revenue for each product sold in January?
+#OR
 SELECT distinct Product, price FROM JanSales ORDER BY price ASC LIMIT 1;
 
-#5b.	What is the total revenue for each product sold in January?
+#5. What is the total revenue for each product sold in January?
 SELECT Product, sum(quantity)*price AS Revenue FROM JanSales WHERE length(orderID)=6 AND orderID <> 'Order ID' GROUP BY Product;
 
 #6.	Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue?
