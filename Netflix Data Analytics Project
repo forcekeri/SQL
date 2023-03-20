@@ -1,17 +1,25 @@
+#In this SQL code, I am querying two databases that hold Nexflix data to answer questions about the data. 
+
+--Pre-question query - join the two databases
 SELECT titles.show_id, people.director, titles.title, titles.type 
 FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info" titles
 JOIN "CharlotteChaze/BreakIntoTech"."netflix_people" people
 ON titles.show_id = people.show_id;
 
+#1. How many movie titles are there in the database? (movies only, not tv shows)
 SELECT Count(*) FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info" WHERE "type"='Movie';
 
+#2. When was the most recent batch of tv shows and/or movies added to the database?
 SELECT max(date(date_added)) FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info";
 
+#3. List all the movies and t shows in alphabetical order.
 SELECT title FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info" ORDER BY "title" ASC;
 
+#4. Who was the Director for the movie Bright Star?
 SELECT director
 FROM "CharlotteChaze/BreakIntoTech"."netflix_people" people
 JOIN "CharlotteChaze/BreakIntoTech"."netflix_titles_info" titles
 ON people.show_id=titles.show_id WHERE "titles.title"='Bright Star';
 
+#5. What is the oldest movie int he database and what year was it made?
 SELECT title, release_year FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info" ORDER BY "release_year" ASC LIMIT 1;
