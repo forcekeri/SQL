@@ -41,3 +41,9 @@ ORDER BY artist_name ASC, track_name ASC;
 
 #Top 5 loudest songs, and information about artist, song name, energy and tempo
 SELECT artist_name, track_name, energy, tempo, loudness FROM Spotifydata ORDER BY loudness DESC LIMIT 5;
+
+#Calculate the average popularity for the artists in the Spotify data table.
+#Then, for every artist with an average popularity of 90 or above, show their name, their average popularity, and label them as a “Top Star”.
+WITH average_popularity_CTE AS (
+SELECT artist_name, avg(popularity) AS average_popularity FROM Spotifydata GROUP BY artist_name)
+SELECT artist_name, average_popularity, 'Top Star' FROM average_popularity_CTE WHERE average_popularity>=90 ORDER BY average_popularity DESC;
