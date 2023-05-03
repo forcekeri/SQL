@@ -1,0 +1,196 @@
+--Dataset represents a digital media store and includes tables for artists, albums, media tracks, invoices, and customers.
+
+--display employee and their supervisor
+SELECT e.firstname||' '||e.lastname AS employee_name,
+sup.firstname||' '||sup.lastname AS supervisor_name
+FROM employees e
+JOIN employees sup
+ON e.reportsto=sup.employeeid;
+
+--number of customers each employee hleped
+SELECT count(c.customerid) AS customer_count
+, e.firstname||' '||e.lastname AS employee_name
+FROM employees e
+RIGHT JOIN customers c
+ON e.employeeid=c.supportrepid
+GROUP BY employee_name;
+
+
+SELECT
+c.customerid
+,c.firstname
+,c.lastname
+,ii.invoiceid
+,sum(ii.quantity*ii.unitprice) AS price
+FROM invoice_items AS ii
+JOIN invoices AS i
+ON ii.invoiceid=i.invoiceid
+JOIN customers AS c
+ON i.customerid=c.customerid
+GROUP BY 
+c.customerid
+,ii.invoiceid;
+
+SELECT 
+artists.Name
+, albums.title
+, genres.name
+, tracks.TrackId
+, tracks.Name
+, tracks.UnitPrice
+FROM artists
+JOIN albums
+ON artists.artistid=albums.artistid
+JOIN tracks
+ON albums.albumid=tracks.albumid
+JOIN genres
+ON genres.genreid=tracks.genreid
+WHERE genres.name LIKE '%rock%';
+
+--Show Customers (their full names, customer ID, and country) who are not in the US.
+SELECT
+firstname
+,lastname
+, customerid
+, country
+FROM customers
+WHERE country != 'USA';
+
+--Show only the Customers from Brazil.
+SELECT
+*
+FROM customers
+WHERE country = 'Brazil';
+
+--Find the Invoices of customers who are from Brazil. 
+--The resulting table should show the customer's full name, Invoice ID, Date of the invoice, and billing country.
+SELECT
+c.firstname
+, c.lastname
+, i.invoiceid
+, i.invoicedate
+, i.billingcountry
+FROM customers c
+JOIN invoices i
+ON c.customerid=i.customerid
+WHERE country = 'Brazil';
+
+--Show the Employees who are Sales Agents.
+SELECT
+*
+FROM employees
+WHERE title = 'Sales Support Agent';
+
+--Find a unique/distinct list of billing countries from the Invoice table.
+--Include count of number of invoices
+SELECT
+DISTINCT(billingcountry)
+,COUNT(billingcountry)
+FROM invoices
+GROUP BY billingcountry
+ORDER BY COUNT(billingcountry) DESC;
+
+--Provide a query that shows the invoices associated with each sales agent. 
+--The resulting table should include the Sales Agent's full name.
+SELECT
+e.firstname
+, e.lastname
+, i.invoiceid
+FROM employees e
+RIGHT JOIN customers c
+ON e.employeeid=c.supportrepid
+JOIN invoices i
+ON i.customerid=c.customerid
+WHERE title = 'Sales Support Agent';
+
+--Show the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers.
+SELECT
+c.firstname AS customer_first
+, c.lastname AS customer_last
+, i.total
+, c.country
+, e.firstname
+, e.lastname
+FROM customers c
+JOIN invoices i
+ON c.customerid=i.customerid
+JOIN employees e
+ON e.employeeid=c.supportrepid
+WHERE e.title = 'Sales Support Agent';
+
+--How many Invoices were there in 2009?
+SELECT
+COUNT(*)
+FROM invoices
+WHERE invoicedate LIKE '2009%';
+
+--What are the total sales for 2009?
+SELECT
+ROUND(sum(total),2)
+FROM invoices
+WHERE invoicedate LIKE '2009%';
+
+--Write a query that includes the purchased track name with each invoice line ID.
+SELECT
+tracks.Name
+, invoice_items.invoiceid
+FROM invoice_items
+JOIN tracks
+ON tracks.trackid=invoice_items.trackid
+ORDER BY tracks.name;
+
+--Write a query that includes the purchased track name AND artist name with each invoice line ID.
+SELECT
+tracks.Name
+, artists.name
+, invoice_items.invoiceid
+FROM invoice_items
+JOIN tracks
+ON tracks.trackid=invoice_items.trackid
+JOIN albums
+ON tracks.albumid=albums.AlbumId
+JOIN artists
+ON artists.artistid=albums.artistid
+ORDER BY artists.name, tracks.name;
+
+--Provide a query that shows all the Tracks, and include the Album name, Media type, and Genre.
+SELECT
+tracks.name AS track_name
+, albums.Title AS album
+, media_types.Name AS media_type
+, genres.name AS genre
+FROM tracks
+JOIN albums
+ON tracks.albumid=albums.albumid
+JOIN genres
+ON tracks.genreid=genres.genreid
+JOIN media_types
+ON tracks.mediatypeid=media_types.mediatypeid;
+
+--Show the total sales made by each sales agent.
+SELECT e.firstname
+, e.lastname
+, count(i.invoiceid) AS total_number_of_sales
+, ROUND(sum(i.total),2) AS total_sales_amount
+FROM employees e
+JOIN customers c
+ON e.employeeid=c.supportrepid
+JOIN invoices i
+ON c.customerid=i.customerid
+WHERE title = 'Sales Support Agent'
+GROUP BY e.firstname,e.lastname;
+
+--Which sales agent made the most dollars in sales in 2009?
+SELECT e.firstname
+, e.lastname
+, ROUND(sum(i.total),2) AS total_sales_amount
+FROM employees e
+JOIN customers c
+ON e.employeeid=c.supportrepid
+JOIN invoices i
+ON c.customerid=i.customerid
+WHERE title = 'Sales Support Agent'
+AND i.invoicedate LIKE '2009%'
+GROUP BY e.firstname,e.lastname
+ORDER BY total_sales_amount DESC
+LIMIT 1;
